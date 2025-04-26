@@ -18,13 +18,26 @@ def go(message):
     else:
         bot.reply_to(message, "Ты уже создал себе покемона")
 
-# @bot.message_handler(commands=['feed'])
-# def feed(message):
-#     if message.from_user.username in Pokemon.pokemons.keys():
-#         pokemon = Pokemon(message.from_user.username)
-#         pokemon.update()
-#         bot.reply_to(message, "Ты покормил покемона!")
-    
+@bot.message_handler(commands=['feed'])
+def feed_pok(message):
+    if message.from_user.username in Pokemon.pokemons.keys():
+        pok = Pokemon.pokemons[message.from_user.username]
+        response = pok.feed()
+        bot.send_message(message.chat.id, response)
+    else:
+        bot.send_message(message.chat.id, "У вас нет покемона.")
+
+@bot.message_handler(commands=['info'])
+def info(message):
+    # if message.reply_to_message:
+    #     if message.reply_to_message.from_user.username in Pokemon.pokemons.keys():
+    #         bot.send_message(message.chat.id, Pokemon.pokemons.get(message.reply_to_message.from_user.username).info())
+    #         bot.send_photo(message.chat.id, Pokemon.pokemons.get(message.reply_to_message.from_user.username).show_img())
+    # else: 
+    if message.from_user.username in Pokemon.pokemons.keys():
+        bot.send_message(message.chat.id, Pokemon.pokemons.get(message.from_user.username).info())
+        bot.send_photo(message.chat.id, Pokemon.pokemons.get(message.from_user.username).show_img())
+
 @bot.message_handler(commands=['attack'])
 def attack(message):
     if message.reply_to_message:
